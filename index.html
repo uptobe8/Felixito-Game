@@ -1,46 +1,23 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Felixito Game: juego web rápido y responsive." />
-  <title>Felixito Game</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Felixito STL API</title>
+  <style>
+    body{font-family:Arial,sans-serif;max-width:860px;margin:40px auto;padding:0 16px;line-height:1.5}
+    code{background:#f3f4f6;padding:2px 6px;border-radius:6px}
+    .box{border:1px solid #ddd;border-radius:12px;padding:18px;margin-top:18px}
+  </style>
 </head>
 <body>
-  <main class="shell">
-    <section class="hero">
-      <div>
-        <p class="eyebrow">Felixito Game</p>
-        <h1>Recoge estrellas, evita bombas y supera tu récord.</h1>
-        <p class="intro">Mueve a Felixito con teclado, ratón o pantalla táctil. Cada estrella suma puntos; cada bomba resta una vida.</p>
-      </div>
-      <div class="panel score-panel" aria-live="polite">
-        <span>Puntuación</span>
-        <strong id="score">0</strong>
-        <span>Récord: <b id="bestScore">0</b></span>
-      </div>
-    </section>
-
-    <section class="game-card">
-      <div class="hud">
-        <div>Nivel <strong id="level">1</strong></div>
-        <div>Vidas <strong id="lives">3</strong></div>
-        <div>Tiempo <strong id="time">60</strong>s</div>
-      </div>
-
-      <canvas id="game" width="960" height="540" aria-label="Felixito Game"></canvas>
-
-      <div class="controls">
-        <button id="startBtn" type="button">Empezar</button>
-        <button id="pauseBtn" type="button" disabled>Pausa</button>
-        <button id="resetBtn" type="button">Reiniciar</button>
-      </div>
-
-      <p class="help">Controles: ← → / A D, ratón o deslizar en móvil.</p>
-    </section>
-  </main>
-
-  <script src="script.js"></script>
+  <h1>Felixito STL API</h1>
+  <p>Proyecto preparado para desplegar una API FastAPI que procesa imágenes y genera archivos STL.</p>
+  <div class="box">
+    <h2>Rutas</h2>
+    <p><code>/docs</code> documentación Swagger cuando esté desplegado en un hosting Python.</p>
+    <p><code>/health</code> comprobación de estado.</p>
+    <p><code>/imagen-a-stl</code> generación directa de STL desde imagen.</p>
+  </div>
 </body>
 </html>

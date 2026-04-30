@@ -1,9 +1,39 @@
 <!doctype html>
 <html lang="es">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Felixito STL API</title></head>
-<body style="font-family:Arial,sans-serif;max-width:900px;margin:50px auto;padding:0 18px;line-height:1.5">
-<h1>Felixito STL API</h1>
-<p>Entrega web publicada. Proyecto preparado para procesar imagenes, vectorizar contornos y generar archivos STL.</p>
-<p>Backend incluido en el repositorio: FastAPI, OpenCV, Trimesh y Shapely.</p>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Felixito Game</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,system-ui,sans-serif;background:#08111f;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}.app{width:min(980px,100%)}h1{font-size:clamp(38px,8vw,84px);line-height:.9;margin:0 0 12px}.top{display:flex;justify-content:space-between;gap:14px;align-items:end;margin-bottom:14px}.intro{color:#b8c7dc;margin:0;font-size:18px}.score{background:#12223a;border:1px solid #27415f;border-radius:18px;padding:14px 18px;min-width:150px;text-align:center}.score b{display:block;color:#ffd166;font-size:42px}canvas{width:100%;aspect-ratio:16/9;background:linear-gradient(#10294a,#06101f);border:1px solid #27415f;border-radius:22px;display:block;touch-action:none}.bar{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:14px 0}.pill{background:#12223a;border:1px solid #27415f;border-radius:999px;padding:10px 14px}.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}button{border:0;border-radius:14px;padding:13px 18px;font-weight:800;background:#ffd166;color:#111;cursor:pointer}button:nth-child(2){background:#06d6a0}.hint{color:#b8c7dc;margin:12px 0 0}@media(max-width:700px){body{align-items:flex-start}.top{display:block}.score{margin-top:14px;text-align:left}.score b{font-size:34px}}
+</style>
+</head>
+<body>
+<main class="app">
+<section class="top"><div><h1>Felixito Game</h1><p class="intro">Recoge estrellas, evita bombas y supera tu record.</p></div><div class="score">Puntos<b id="score">0</b></div></section>
+<div class="bar"><div class="pill">Vidas: <b id="lives">3</b></div><div class="pill">Nivel: <b id="level">1</b></div><div class="pill">Tiempo: <b id="time">60</b>s</div><div class="pill">Record: <b id="best">0</b></div></div>
+<canvas id="game" width="960" height="540"></canvas>
+<div class="btns"><button id="start">Jugar</button><button id="pause">Pausa</button><button id="reset">Reiniciar</button></div>
+<p class="hint">Controles: flechas, A/D, raton o dedo en movil.</p>
+</main>
+<script>
+const c=document.getElementById('game'),x=c.getContext('2d');
+const $=id=>document.getElementById(id);let keys={},items=[],run=false,pause=false,last=0;
+let s=0,l=3,t=60,lv=1,b=Number(localStorage.felixitoBest||0);let p={x:448,y:455,w:64,h:60,v:520};
+function hud(){score.textContent=s;lives.textContent=l;level.textContent=lv;time.textContent=Math.ceil(Math.max(0,t));best.textContent=b}hud();
+function reset(){s=0;l=3;t=60;lv=1;items=[];p.x=448;run=false;pause=false;hud();drawMsg('Felixito Game','Pulsa Jugar')}reset();
+function start(){if(!run){run=true;pause=false;last=performance.now();requestAnimationFrame(loop)}}
+function end(){run=false;if(s>b){b=s;localStorage.felixitoBest=b}hud();drawMsg('Fin de partida','Puntos: '+s)}
+function spawn(){items.push({bad:Math.random()<.28,x:30+Math.random()*900,y:-30,r:18,v:160+lv*35+Math.random()*90,a:0})}
+function loop(n){if(!run)return;let d=Math.min((n-last)/1000,.05);last=n;if(!pause)upd(d);draw();requestAnimationFrame(loop)}
+function upd(d){t-=d;if(t<=0||l<=0)return end();lv=1+Math.floor(s/100);if(keys.ArrowLeft||keys.a)p.x-=p.v*d;if(keys.ArrowRight||keys.d)p.x+=p.v*d;p.x=Math.max(0,Math.min(c.width-p.w,p.x));if(Math.random()<.025+lv*.004)spawn();items.forEach(i=>{i.y+=i.v*d;i.a+=d*5});items=items.filter(i=>{let hit=i.x>p.x&&i.x<p.x+p.w&&i.y+i.r>p.y&&i.y-i.r<p.y+p.h;if(hit){i.bad?l--:s+=10;hud();return false}return i.y<c.height+50});hud()}
+function bg(){let g=x.createLinearGradient(0,0,0,c.height);g.addColorStop(0,'#12345a');g.addColorStop(1,'#06101f');x.fillStyle=g;x.fillRect(0,0,c.width,c.height);x.fillStyle='rgba(255,255,255,.16)';for(let i=0;i<55;i++){x.beginPath();x.arc((i*173)%960,(i*91)%540,i%3+1,0,7);x.fill()}}
+function player(){x.save();x.translate(p.x+p.w/2,p.y+p.h/2);x.fillStyle='#ffd166';round(-32,-30,64,60,16);x.fill();x.fillStyle='#111';x.beginPath();x.arc(-13,-8,5,0,7);x.arc(13,-8,5,0,7);x.fill();x.lineWidth=5;x.beginPath();x.arc(0,5,18,.15*Math.PI,.85*Math.PI);x.stroke();x.restore()}
+function round(a,b,w,h,r){x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+w,b,r);x.closePath()}
+function star(i){x.save();x.translate(i.x,i.y);x.rotate(i.a);x.fillStyle=i.bad?'#ef476f':'#ffd166';x.beginPath();if(i.bad){x.arc(0,0,i.r,0,7)}else{for(let k=0;k<10;k++){let r=k%2?9:i.r,a=k*Math.PI/5-Math.PI/2;x.lineTo(Math.cos(a)*r,Math.sin(a)*r)}}x.closePath();x.fill();x.restore()}
+function draw(){bg();player();items.forEach(star)}
+function drawMsg(a,b){bg();x.fillStyle='rgba(0,0,0,.45)';x.fillRect(0,0,c.width,c.height);x.textAlign='center';x.fillStyle='#fff';x.font='800 58px Arial';x.fillText(a,480,250);x.fillStyle='#b8c7dc';x.font='26px Arial';x.fillText(b,480,292)}
+addEventListener('keydown',e=>keys[e.key]=true);addEventListener('keyup',e=>keys[e.key]=false);c.addEventListener('pointermove',e=>{let r=c.getBoundingClientRect();p.x=((e.clientX-r.left)/r.width*c.width)-p.w/2;p.x=Math.max(0,Math.min(c.width-p.w,p.x))});$('start').onclick=start;$('pause').onclick=()=>pause=!pause;$('reset').onclick=reset;
+</script>
 </body>
 </html>

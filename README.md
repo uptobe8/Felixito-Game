@@ -1,40 +1,61 @@
-# Felixito STL API
+# Felixito Game - Academia de Marketing IA
 
-API FastAPI para procesar imágenes, limpiar contornos, vectorizar y generar archivos STL.
+Videojuego educativo tipo aventura grafica en primera persona para alumnos de marketing digital.
 
-## Endpoints
+El jugador entra en una academia, elige un sector y completa misiones sobre canales, activos digitales, herramientas, GPTs, automatizaciones y metricas. La puntuacion se calcula segun la coherencia con el plan de digitalizacion proporcionado.
 
-- `GET /health` — comprobación de estado.
-- `POST /procesar-imagen` — convierte imagen a binario.
-- `POST /limpiar` — limpia contornos de una imagen binaria.
-- `POST /vectorizar-contornos` — devuelve `vector_paths`.
-- `POST /generar-stl` — genera STL desde `vector_paths`.
-- `POST /imagen-a-stl` — genera STL directamente desde imagen.
+## URL publicada
 
-## Ejecutar local
+https://uptobe8.github.io/Felixito-Game/
 
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn main:app --reload
-```
+## Ejecutar en local
 
-Abrir:
+No necesita internet, servidor, backend ni dependencias.
+
+Opcion 1:
 
 ```text
-http://localhost:8000/docs
+Abre index.html en el navegador.
 ```
 
-## Despliegue recomendado
-
-Para producción, usar Docker/Render/Railway/Fly.io.
+Opcion 2, si prefieres servidor local:
 
 ```bash
-docker build -t felixito-stl-api .
-docker run -p 8000:8000 felixito-stl-api
+python -m http.server 8000
 ```
 
-## Nota
+Despues abre:
 
-El ZIP recibido también contiene una app de Apps Script (`click-consent-app`) y varios binarios/ZIP/STL. El código ejecutable principal publicado aquí es la API de generación STL.
+```text
+http://localhost:8000
+```
+
+## Sectores incluidos
+
+- B2B, consultoria e industria.
+- B2C ecommerce y producto fisico.
+- Educacion, cursos y academias.
+- Negocio local.
+- Inmobiliaria, reformas y alto ticket.
+- Restauracion, turismo y experiencias.
+- Industria y empresa tradicional.
+
+## Mecanicas
+
+- Vista tipo primera persona.
+- Seleccion de sector.
+- Misiones con decisiones.
+- Retroalimentacion inmediata.
+- Puntuacion por coherencia.
+- Insignias de progreso.
+- Informe final con decisiones tomadas.
+
+## Archivos principales
+
+- `index.html`: juego completo, estilos, logica y datos del plan.
+- `.nojekyll`: evita procesamiento Jekyll en GitHub Pages.
+- `.github/workflows/static.yml`: publica el sitio estatico en GitHub Pages.
+
+## Privacidad
+
+No incluye publicidad, trackers, telemetria, APIs externas ni servicios en la nube. Funciona offline al abrir el archivo localmente.
